@@ -10,7 +10,11 @@ export class PostsService {
     constructor(@InjectModel(Post) private postRepository: typeof Post,
                 private fileService: FilesService,
                 private userService: UsersService) {}
-    async create(dto: CreatePostDto, image: any) {
+    async create(dto: CreatePostDto, image?: any) {
+        if (!image) {
+            const post = await this.postRepository.create(dto)
+            return post
+        }
         const fileName = await this.fileService.createFile(image)
         const post = await this.postRepository.create({...dto, image: fileName})
         return post
@@ -22,7 +26,9 @@ export class PostsService {
         if (!post || !user) {
             throw new HttpException('Такой пост не найден', HttpStatus.NOT_FOUND)
         }
-        await this.fileService.removeFile(post.image)
+        if (post.image !== null) {
+            await this.fileService.removeFile(post.image)
+        }
         user.$remove('posts', post.id)
         return {message: `Пост с id ${dto.id} удалён`}
     }

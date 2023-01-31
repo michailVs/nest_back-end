@@ -13,8 +13,11 @@ export class PostsController {
 
     @Post()
     @UseInterceptors(FileInterceptor('image'))
-    createPost(@Body() dto: CreatePostDto, @UploadedFile() image) {
-        return this.postService.create(dto, image)
+    createPost(@Body() dto: CreatePostDto, @UploadedFile() image?) {
+        if (!image) {
+            return this.postService.create(dto, image)
+        }
+        return this.postService.create(dto)
     }
 
     @Post('/remove')
