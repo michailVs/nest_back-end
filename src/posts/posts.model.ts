@@ -27,11 +27,13 @@ export class Post extends Model<Post, PostCreationAttrs> {
     @ApiProperty({example: 'Картинка в посте', description: 'Картинка'})
     @Column({type: DataType.STRING})
     image: string;
-
+    
+    @ApiProperty({example: '1', description: 'Уникальный индентификатор пользователя'})
     @ForeignKey(() => User)
     @Column({type: DataType.INTEGER})
     userId: number
-
+    
+    @ApiProperty({example: 'Thomas', description: 'Username пользователя создавшего пост'})
     @BelongsTo(() => User)
     author: User
 }
